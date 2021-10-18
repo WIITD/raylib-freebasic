@@ -2,12 +2,10 @@
 
 [FreeBasic](https://freebasic.net/) bindings for [raylib](https://github.com/raysan5/raylib)  
   
-platform | 
------------- | -------------
-linux | works
-windows | works
-mac | should works
-bsd | should works
+Lib | Linux | Windows | Mac | BSD |
+--- | ----- | ------- | --- | --- |
+raylib.h | works | works | should works | should works
+raymath.h | works | works | should works | should works
 
 ## example
 ```basic
