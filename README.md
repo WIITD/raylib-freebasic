@@ -4,9 +4,9 @@
   
 Lib | Linux | Windows | Mac | BSD |
 --- | ----- | ------- | --- | --- |
-raylib.bi | works | works | should works | should works
-raymath.bi | works | works | should works | should works
-rlgl.bi | works | works | should works | should works
+raylib.bi | works | works | should work | should work
+raymath.bi | works | works | should work | should work
+rlgl.bi | works | works | should work | should work
 
 ## example
 ```basic
