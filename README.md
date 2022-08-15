@@ -1,4 +1,4 @@
-# raylib-freebasic -> v4.0
+# raylib-freebasic -> v4.2
 
 [FreeBasic](https://freebasic.net/) bindings for [raylib](https://github.com/raysan5/raylib)  
   
@@ -6,7 +6,7 @@ Lib | Linux | Windows | Mac | BSD |
 --- | ----- | ------- | --- | --- |
 raylib.bi | works | works | should work | should work
 raymath.bi | works | works | should work | should work
-rlgl.bi | works | works | should work | should work
+raygui.bi | not tested | not tested | not tested | not tested
 
 ## example
 ```basic
