@@ -367,7 +367,7 @@ type Ray
 end type
 
 type RayCollision
-	hit as byte
+	hit as boolean
 	distance as single
 	point_ as Vector3
 	normal as Vector3
@@ -405,7 +405,7 @@ end type
 type Music
 	stream as AudioStream
 	frameCount as ulong
-	looping as byte
+	looping as boolean
 	ctxType as long
 	ctxData as any ptr
 end type
@@ -829,21 +829,21 @@ end enum
 
 type TraceLogCallback as sub(byval logLevel as long, byval text as const zstring ptr, byval args as va_list)
 type LoadFileDataCallback as function(byval fileName as const zstring ptr, byval bytesRead as ulong ptr) as ubyte ptr
-type SaveFileDataCallback as function(byval fileName as const zstring ptr, byval data_ as any ptr, byval bytesToWrite as ulong) as byte
+type SaveFileDataCallback as function(byval fileName as const zstring ptr, byval data_ as any ptr, byval bytesToWrite as ulong) as boolean
 type LoadFileTextCallback as function(byval fileName as const zstring ptr) as zstring ptr
-type SaveFileTextCallback as function(byval fileName as const zstring ptr, byval text as zstring ptr) as byte
+type SaveFileTextCallback as function(byval fileName as const zstring ptr, byval text as zstring ptr) as boolean
 
 declare sub InitWindow(byval width_ as long, byval height_ as long, byval title as const zstring ptr)
-declare function WindowShouldClose() as byte
+declare function WindowShouldClose() as boolean
 declare sub CloseWindow()
-declare function IsWindowReady() as byte
-declare function IsWindowFullscreen() as byte
-declare function IsWindowHidden() as byte
-declare function IsWindowMinimized() as byte
-declare function IsWindowMaximized() as byte
-declare function IsWindowFocused() as byte
-declare function IsWindowResized() as byte
-declare function IsWindowState(byval flag as ulong) as byte
+declare function IsWindowReady() as boolean
+declare function IsWindowFullscreen() as boolean
+declare function IsWindowHidden() as boolean
+declare function IsWindowMinimized() as boolean
+declare function IsWindowMaximized() as boolean
+declare function IsWindowFocused() as boolean
+declare function IsWindowResized() as boolean
+declare function IsWindowState(byval flag as ulong) as boolean
 declare sub SetWindowState(byval flags as ulong)
 declare sub ClearWindowState(byval flags as ulong)
 declare sub ToggleFullscreen()
@@ -882,10 +882,10 @@ declare sub PollInputEvents()
 declare sub WaitTime(byval seconds as double)
 declare sub ShowCursor()
 declare sub HideCursor()
-declare function IsCursorHidden() as byte
+declare function IsCursorHidden() as boolean
 declare sub EnableCursor()
 declare sub DisableCursor()
-declare function IsCursorOnScreen() as byte
+declare function IsCursorOnScreen() as boolean
 declare sub ClearBackground(byval color as RLColor)
 declare sub BeginDrawing()
 declare sub EndDrawing()
@@ -942,14 +942,14 @@ declare sub SetLoadFileTextCallback(byval callback as LoadFileTextCallback)
 declare sub SetSaveFileTextCallback(byval callback as SaveFileTextCallback)
 declare function LoadFileData(byval fileName as const zstring ptr, byval bytesRead as ulong ptr) as ubyte ptr
 declare sub UnloadFileData(byval data_ as ubyte ptr)
-declare function SaveFileData(byval fileName as const zstring ptr, byval data_ as any ptr, byval bytesToWrite as ulong) as byte
-declare function ExportDataAsCode(byval data_ as const zstring ptr, byval size as ulong, byval fileName as const zstring ptr) as byte
+declare function SaveFileData(byval fileName as const zstring ptr, byval data_ as any ptr, byval bytesToWrite as ulong) as boolean
+declare function ExportDataAsCode(byval data_ as const zstring ptr, byval size as ulong, byval fileName as const zstring ptr) as boolean
 declare function LoadFileText(byval fileName as const zstring ptr) as zstring ptr
 declare sub UnloadFileText(byval text as zstring ptr)
-declare function SaveFileText(byval fileName as const zstring ptr, byval text as zstring ptr) as byte
-declare function FileExists(byval fileName as const zstring ptr) as byte
-declare function DirectoryExists(byval dirPath as const zstring ptr) as byte
-declare function IsFileExtension(byval fileName as const zstring ptr, byval ext as const zstring ptr) as byte
+declare function SaveFileText(byval fileName as const zstring ptr, byval text as zstring ptr) as boolean
+declare function FileExists(byval fileName as const zstring ptr) as boolean
+declare function DirectoryExists(byval dirPath as const zstring ptr) as boolean
+declare function IsFileExtension(byval fileName as const zstring ptr, byval ext as const zstring ptr) as boolean
 declare function GetFileLength(byval fileName as const zstring ptr) as long
 declare function GetFileExtension(byval fileName as const zstring ptr) as const zstring ptr
 declare function GetFileName(byval filePath as const zstring ptr) as const zstring ptr
@@ -958,12 +958,12 @@ declare function GetDirectoryPath(byval filePath as const zstring ptr) as const 
 declare function GetPrevDirectoryPath(byval dirPath as const zstring ptr) as const zstring ptr
 declare function GetWorkingDirectory() as const zstring ptr
 declare function GetApplicationDirectory() as const zstring ptr
-declare function ChangeDirectory(byval dir as const zstring ptr) as byte
-declare function IsPathFile(byval path as const zstring ptr) as byte
+declare function ChangeDirectory(byval dir as const zstring ptr) as boolean
+declare function IsPathFile(byval path as const zstring ptr) as boolean
 declare function LoadDirectoryFiles(byval dirPath as const zstring ptr) as FilePathList
-declare function LoadDirectoryFilesEx(byval basePath as const zstring ptr, byval filter as const zstring ptr, byval scanSubdirs as byte) as FilePathList
+declare function LoadDirectoryFilesEx(byval basePath as const zstring ptr, byval filter as const zstring ptr, byval scanSubdirs as boolean) as FilePathList
 declare sub UnloadDirectoryFiles(byval files as FilePathList)
-declare function IsFileDropped() as byte
+declare function IsFileDropped() as boolean
 declare function LoadDroppedFiles() as FilePathList
 declare sub UnloadDroppedFiles(byval files as FilePathList)
 declare function GetFileModTime(byval fileName as const zstring ptr) as clong
@@ -971,27 +971,27 @@ declare function CompressData(byval data_ as const ubyte ptr, byval dataSize as 
 declare function DecompressData(byval compData as const ubyte ptr, byval compDataSize as long, byval dataSize as long ptr) as ubyte ptr
 declare function EncodeDataBase64(byval data_ as const ubyte ptr, byval dataSize as long, byval outputSize as long ptr) as zstring ptr
 declare function DecodeDataBase64(byval data_ as const ubyte ptr, byval outputSize as long ptr) as ubyte ptr
-declare function IsKeyPressed(byval key as long) as byte
-declare function IsKeyDown(byval key as long) as byte
-declare function IsKeyReleased(byval key as long) as byte
-declare function IsKeyUp(byval key as long) as byte
+declare function IsKeyPressed(byval key as long) as boolean
+declare function IsKeyDown(byval key as long) as boolean
+declare function IsKeyReleased(byval key as long) as boolean
+declare function IsKeyUp(byval key as long) as boolean
 declare sub SetExitKey(byval key as long)
 declare function GetKeyPressed() as long
 declare function GetCharPressed() as long
-declare function IsGamepadAvailable(byval gamepad as long) as byte
+declare function IsGamepadAvailable(byval gamepad as long) as boolean
 declare function GetGamepadName(byval gamepad as long) as const zstring ptr
-declare function IsGamepadButtonPressed(byval gamepad as long, byval button as long) as byte
-declare function IsGamepadButtonDown(byval gamepad as long, byval button as long) as byte
-declare function IsGamepadButtonReleased(byval gamepad as long, byval button as long) as byte
-declare function IsGamepadButtonUp(byval gamepad as long, byval button as long) as byte
+declare function IsGamepadButtonPressed(byval gamepad as long, byval button as long) as boolean
+declare function IsGamepadButtonDown(byval gamepad as long, byval button as long) as boolean
+declare function IsGamepadButtonReleased(byval gamepad as long, byval button as long) as boolean
+declare function IsGamepadButtonUp(byval gamepad as long, byval button as long) as boolean
 declare function GetGamepadButtonPressed() as long
 declare function GetGamepadAxisCount(byval gamepad as long) as long
 declare function GetGamepadAxisMovement(byval gamepad as long, byval axis as long) as single
 declare function SetGamepadMappings(byval mappings as const zstring ptr) as long
-declare function IsMouseButtonPressed(byval button as long) as byte
-declare function IsMouseButtonDown(byval button as long) as byte
-declare function IsMouseButtonReleased(byval button as long) as byte
-declare function IsMouseButtonUp(byval button as long) as byte
+declare function IsMouseButtonPressed(byval button as long) as boolean
+declare function IsMouseButtonDown(byval button as long) as boolean
+declare function IsMouseButtonReleased(byval button as long) as boolean
+declare function IsMouseButtonUp(byval button as long) as boolean
 declare function GetMouseX() as long
 declare function GetMouseY() as long
 declare function GetMousePosition() as Vector2
@@ -1008,7 +1008,7 @@ declare function GetTouchPosition(byval index as long) as Vector2
 declare function GetTouchPointId(byval index as long) as long
 declare function GetTouchPointCount() as long
 declare sub SetGesturesEnabled(byval flags as ulong)
-declare function IsGestureDetected(byval gesture as long) as byte
+declare function IsGestureDetected(byval gesture as long) as boolean
 declare function GetGestureDetected() as long
 declare function GetGestureHoldDuration() as single
 declare function GetGestureDragVector() as Vector2
@@ -1059,14 +1059,14 @@ declare sub DrawTriangleStrip(byval points as Vector2 ptr, byval pointCount as l
 declare sub DrawPoly(byval center as Vector2, byval sides as long, byval radius as single, byval rotation as single, byval color as RLColor)
 declare sub DrawPolyLines(byval center as Vector2, byval sides as long, byval radius as single, byval rotation as single, byval color as RLColor)
 declare sub DrawPolyLinesEx(byval center as Vector2, byval sides as long, byval radius as single, byval rotation as single, byval lineThick as single, byval color as RLColor)
-declare function CheckCollisionRecs(byval rec1 as Rectangle, byval rec2 as Rectangle) as byte
-declare function CheckCollisionCircles(byval center1 as Vector2, byval radius1 as single, byval center2 as Vector2, byval radius2 as single) as byte
-declare function CheckCollisionCircleRec(byval center as Vector2, byval radius as single, byval rec as Rectangle) as byte
-declare function CheckCollisionPointRec(byval point_ as Vector2, byval rec as Rectangle) as byte
-declare function CheckCollisionPointCircle(byval point_ as Vector2, byval center as Vector2, byval radius as single) as byte
-declare function CheckCollisionPointTriangle(byval point_ as Vector2, byval p1 as Vector2, byval p2 as Vector2, byval p3 as Vector2) as byte
-declare function CheckCollisionLines(byval startPos1 as Vector2, byval endPos1 as Vector2, byval startPos2 as Vector2, byval endPos2 as Vector2, byval collisionPoint as Vector2 ptr) as byte
-declare function CheckCollisionPointLine(byval point_ as Vector2, byval p1 as Vector2, byval p2 as Vector2, byval threshold as long) as byte
+declare function CheckCollisionRecs(byval rec1 as Rectangle, byval rec2 as Rectangle) as boolean
+declare function CheckCollisionCircles(byval center1 as Vector2, byval radius1 as single, byval center2 as Vector2, byval radius2 as single) as boolean
+declare function CheckCollisionCircleRec(byval center as Vector2, byval radius as single, byval rec as Rectangle) as boolean
+declare function CheckCollisionPointRec(byval point_ as Vector2, byval rec as Rectangle) as boolean
+declare function CheckCollisionPointCircle(byval point_ as Vector2, byval center as Vector2, byval radius as single) as boolean
+declare function CheckCollisionPointTriangle(byval point_ as Vector2, byval p1 as Vector2, byval p2 as Vector2, byval p3 as Vector2) as boolean
+declare function CheckCollisionLines(byval startPos1 as Vector2, byval endPos1 as Vector2, byval startPos2 as Vector2, byval endPos2 as Vector2, byval collisionPoint as Vector2 ptr) as boolean
+declare function CheckCollisionPointLine(byval point_ as Vector2, byval p1 as Vector2, byval p2 as Vector2, byval threshold as long) as boolean
 declare function GetCollisionRec(byval rec1 as Rectangle, byval rec2 as Rectangle) as Rectangle
 declare function LoadImage(byval fileName as const zstring ptr) as Image
 declare function LoadImageRaw(byval fileName as const zstring ptr, byval width_ as long, byval height_ as long, byval format_ as long, byval headerSize as long) as Image
@@ -1075,8 +1075,8 @@ declare function LoadImageFromMemory(byval fileType as const zstring ptr, byval 
 declare function LoadImageFromTexture(byval texture as Texture2D) as Image
 declare function LoadImageFromScreen() as Image
 declare sub UnloadImage(byval image as Image)
-declare function ExportImage(byval image as Image, byval fileName as const zstring ptr) as byte
-declare function ExportImageAsCode(byval image as Image, byval fileName as const zstring ptr) as byte
+declare function ExportImage(byval image as Image, byval fileName as const zstring ptr) as boolean
+declare function ExportImageAsCode(byval image as Image, byval fileName as const zstring ptr) as boolean
 declare function GenImageColor(byval width_ as long, byval height_ as long, byval color as RLColor) as Image
 declare function GenImageGradientV(byval width_ as long, byval height_ as long, byval top as RLColor, byval bottom as RLColor) as Image
 declare function GenImageGradientH(byval width_ as long, byval height_ as long, byval left_ as RLColor, byval right_ as RLColor) as Image
@@ -1171,7 +1171,7 @@ declare function LoadFontData(byval fileData as const ubyte ptr, byval dataSize 
 declare function GenImageFontAtlas(byval chars as const GlyphInfo ptr, byval recs as Rectangle ptr ptr, byval glyphCount as long, byval fontSize as long, byval padding as long, byval packMethod as long) as Image
 declare sub UnloadFontData(byval chars as GlyphInfo ptr, byval glyphCount as long)
 declare sub UnloadFont(byval font as Font)
-declare function ExportFontAsCode(byval font as Font, byval fileName as const zstring ptr) as byte
+declare function ExportFontAsCode(byval font as Font, byval fileName as const zstring ptr) as boolean
 declare sub DrawFPS(byval posX as long, byval posY as long)
 declare sub DrawText(byval text as const zstring ptr, byval posX as long, byval posY as long, byval fontSize as long, byval color as RLColor)
 declare sub DrawTextEx(byval font as Font, byval text as const zstring ptr, byval position as Vector2, byval fontSize as single, byval spacing as single, byval tint as RLColor)
@@ -1190,7 +1190,7 @@ declare function GetCodepoint(byval text as const zstring ptr, byval bytesProces
 declare function CodepointToUTF8(byval codepoint as long, byval byteSize as long ptr) as const zstring ptr
 declare function TextCodepointsToUTF8(byval codepoints as const long ptr, byval length as long) as zstring ptr
 declare function TextCopy(byval dst as zstring ptr, byval src as const zstring ptr) as long
-declare function TextIsEqual(byval text1 as const zstring ptr, byval text2 as const zstring ptr) as byte
+declare function TextIsEqual(byval text1 as const zstring ptr, byval text2 as const zstring ptr) as boolean
 declare function TextLength(byval text as const zstring ptr) as ulong
 declare function TextFormat(byval text as const zstring ptr, ...) as const zstring ptr
 declare function TextSubtext(byval text as const zstring ptr, byval position as long, byval length as long) as const zstring ptr
@@ -1238,12 +1238,12 @@ declare sub DrawBoundingBox(byval box as BoundingBox, byval color as RLColor)
 declare sub DrawBillboard(byval camera as Camera, byval texture as Texture2D, byval position as Vector3, byval size as single, byval tint as RLColor)
 declare sub DrawBillboardRec(byval camera as Camera, byval texture as Texture2D, byval source as Rectangle, byval position as Vector3, byval size as Vector2, byval tint as RLColor)
 declare sub DrawBillboardPro(byval camera as Camera, byval texture as Texture2D, byval source as Rectangle, byval position as Vector3, byval up as Vector3, byval size as Vector2, byval origin as Vector2, byval rotation as single, byval tint as RLColor)
-declare sub UploadMesh(byval mesh as Mesh ptr, byval dynamic as byte)
+declare sub UploadMesh(byval mesh as Mesh ptr, byval dynamic as boolean)
 declare sub UpdateMeshBuffer(byval mesh as Mesh, byval index as long, byval data_ as const any ptr, byval dataSize as long, byval offset as long)
 declare sub UnloadMesh(byval mesh as Mesh)
 declare sub DrawMesh(byval mesh as Mesh, byval material as Material, byval transform as Matrix)
 declare sub DrawMeshInstanced(byval mesh as Mesh, byval material as Material, byval transforms as const Matrix ptr, byval instances as long)
-declare function ExportMesh(byval mesh as Mesh, byval fileName as const zstring ptr) as byte
+declare function ExportMesh(byval mesh as Mesh, byval fileName as const zstring ptr) as boolean
 declare function GetMeshBoundingBox(byval mesh as Mesh) as BoundingBox
 declare sub GenMeshTangents(byval mesh as Mesh ptr)
 declare function GenMeshPoly(byval sides as long, byval radius as single) as Mesh
@@ -1266,10 +1266,10 @@ declare function LoadModelAnimations(byval fileName as const zstring ptr, byval 
 declare sub UpdateModelAnimation(byval model as Model, byval anim as ModelAnimation, byval frame as long)
 declare sub UnloadModelAnimation(byval anim as ModelAnimation)
 declare sub UnloadModelAnimations(byval animations as ModelAnimation ptr, byval count as ulong)
-declare function IsModelAnimationValid(byval model as Model, byval anim as ModelAnimation) as byte
-declare function CheckCollisionSpheres(byval center1 as Vector3, byval radius1 as single, byval center2 as Vector3, byval radius2 as single) as byte
-declare function CheckCollisionBoxes(byval box1 as BoundingBox, byval box2 as BoundingBox) as byte
-declare function CheckCollisionBoxSphere(byval box as BoundingBox, byval center as Vector3, byval radius as single) as byte
+declare function IsModelAnimationValid(byval model as Model, byval anim as ModelAnimation) as boolean
+declare function CheckCollisionSpheres(byval center1 as Vector3, byval radius1 as single, byval center2 as Vector3, byval radius2 as single) as boolean
+declare function CheckCollisionBoxes(byval box1 as BoundingBox, byval box2 as BoundingBox) as boolean
+declare function CheckCollisionBoxSphere(byval box as BoundingBox, byval center as Vector3, byval radius as single) as boolean
 declare function GetRayCollisionSphere(byval ray as Ray, byval center as Vector3, byval radius as single) as RayCollision
 declare function GetRayCollisionBox(byval ray as Ray, byval box as BoundingBox) as RayCollision
 declare function GetRayCollisionMesh(byval ray as Ray, byval mesh as Mesh, byval transform as Matrix) as RayCollision
@@ -1278,7 +1278,7 @@ declare function GetRayCollisionQuad(byval ray as Ray, byval p1 as Vector3, byva
 type AudioCallback as sub(byval bufferData as any ptr, byval frames as ulong)
 declare sub InitAudioDevice()
 declare sub CloseAudioDevice()
-declare function IsAudioDeviceReady() as byte
+declare function IsAudioDeviceReady() as boolean
 declare sub SetMasterVolume(byval volume as single)
 declare function LoadWave(byval fileName as const zstring ptr) as Wave
 declare function LoadWaveFromMemory(byval fileType as const zstring ptr, byval fileData as const ubyte ptr, byval dataSize as long) as Wave
@@ -1287,8 +1287,8 @@ declare function LoadSoundFromWave(byval wave as Wave) as Sound
 declare sub UpdateSound(byval sound as Sound, byval data_ as const any ptr, byval sampleCount as long)
 declare sub UnloadWave(byval wave as Wave)
 declare sub UnloadSound(byval sound as Sound)
-declare function ExportWave(byval wave as Wave, byval fileName as const zstring ptr) as byte
-declare function ExportWaveAsCode(byval wave as Wave, byval fileName as const zstring ptr) as byte
+declare function ExportWave(byval wave as Wave, byval fileName as const zstring ptr) as boolean
+declare function ExportWaveAsCode(byval wave as Wave, byval fileName as const zstring ptr) as boolean
 declare sub PlaySound(byval sound as Sound)
 declare sub StopSound(byval sound as Sound)
 declare sub PauseSound(byval sound as Sound)
@@ -1296,7 +1296,7 @@ declare sub ResumeSound(byval sound as Sound)
 declare sub PlaySoundMulti(byval sound as Sound)
 declare sub StopSoundMulti()
 declare function GetSoundsPlaying() as long
-declare function IsSoundPlaying(byval sound as Sound) as byte
+declare function IsSoundPlaying(byval sound as Sound) as boolean
 declare sub SetSoundVolume(byval sound as Sound, byval volume as single)
 declare sub SetSoundPitch(byval sound as Sound, byval pitch as single)
 declare sub SetSoundPan(byval sound as Sound, byval pan as single)
@@ -1309,7 +1309,7 @@ declare function LoadMusicStream(byval fileName as const zstring ptr) as Music
 declare function LoadMusicStreamFromMemory(byval fileType as const zstring ptr, byval data_ as const ubyte ptr, byval dataSize as long) as Music
 declare sub UnloadMusicStream(byval music as Music)
 declare sub PlayMusicStream(byval music as Music)
-declare function IsMusicStreamPlaying(byval music as Music) as byte
+declare function IsMusicStreamPlaying(byval music as Music) as boolean
 declare sub UpdateMusicStream(byval music as Music)
 declare sub StopMusicStream(byval music as Music)
 declare sub PauseMusicStream(byval music as Music)
@@ -1323,11 +1323,11 @@ declare function GetMusicTimePlayed(byval music as Music) as single
 declare function LoadAudioStream(byval sampleRate as ulong, byval sampleSize as ulong, byval channels as ulong) as AudioStream
 declare sub UnloadAudioStream(byval stream as AudioStream)
 declare sub UpdateAudioStream(byval stream as AudioStream, byval data_ as const any ptr, byval frameCount as long)
-declare function IsAudioStreamProcessed(byval stream as AudioStream) as byte
+declare function IsAudioStreamProcessed(byval stream as AudioStream) as boolean
 declare sub PlayAudioStream(byval stream as AudioStream)
 declare sub PauseAudioStream(byval stream as AudioStream)
 declare sub ResumeAudioStream(byval stream as AudioStream)
-declare function IsAudioStreamPlaying(byval stream as AudioStream) as byte
+declare function IsAudioStreamPlaying(byval stream as AudioStream) as boolean
 declare sub StopAudioStream(byval stream as AudioStream)
 declare sub SetAudioStreamVolume(byval stream as AudioStream, byval volume as single)
 declare sub SetAudioStreamPitch(byval stream as AudioStream, byval pitch as single)
