@@ -4,9 +4,9 @@
   
 Lib | Linux | Windows | Mac | BSD |
 --- | ----- | ------- | --- | --- |
-raylib.bi | works | works | should work | should work
-raymath.bi | works | works | should work | should work
-raygui.bi | not tested | not tested | not tested | not tested
+raylib.bi | tested | tested |  not tested |  not tested
+raymath.bi | tested | tested |  not tested |  not tested
+raygui.bi | tested | not tested | not tested | not tested
 
 ## example
 ```basic
@@ -31,4 +31,15 @@ CloseWindow()
 ![Example](example.png)  
   
     
-game using [raylib-freebasic](https://github.com/WIITD/asteroid_field/tree/raylib-freebasic)
+
+## important
+these are just bindings, so you must have raylib already on your computer  
+
+the bindings were tested with raylib and raygui compiled separately as shared libraries  
+
+for more info about building raylib visit [official wiki](https://github.com/raysan5/raylib/wiki)
+and for raygui check [official repo](https://github.com/raysan5/raygui#building)
+
+
+
+simple game i wrote that uses [raylib-freebasic](https://github.com/WIITD/asteroid_field/tree/raylib-freebasic)
