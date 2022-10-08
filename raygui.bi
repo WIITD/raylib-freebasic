@@ -4,6 +4,8 @@
 	#include once "raylib.bi"
 #endif
 
+#inclib "raygui" 
+
 extern "C"
 
 #define RAYGUI_H
