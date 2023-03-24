@@ -48,7 +48,7 @@ some users had problems with linking, changing ``` #include "raylib" ``` to ``` 
 ### raygui
 you have to either compile raygui with raylib or as a separate lib
 
-for more info i advice looking in this [thread][https://github.com/WIITD/raylib-freebasic/issues/7] and [official raygui repo][https://github.com/raysan5/raygui]
+for more info i advice looking in this [thread](https://github.com/WIITD/raylib-freebasic/issues/7) and [official raygui repo](https://github.com/raysan5/raygui)
 
 for more info about building raylib visit [official wiki](https://github.com/raysan5/raylib/wiki)
 and for raygui check [official repo](https://github.com/raysan5/raygui#building)
