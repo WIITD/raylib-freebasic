@@ -32,14 +32,27 @@ CloseWindow()
   
     
 
-## important
-these are just bindings, so you must have raylib already on your computer  
+## compiling
+you need to have raylib on your device, tested with shared lib but static lib should also work
 
-the bindings were tested with raylib and raygui compiled separately as shared libraries  
+### raylib
+
+#### linux
+include **raylib.bi** in your project and it should work, all of dependencies are defined inside the file
+
+#### windows
+include **raylib.bi** in your project and it should work, all of dependencies are defined inside the file
+i primarily use linux so tests were mostly made using mingw and wine without encountering any issues
+some users had problems with linking, changing ``` #include "raylib" ``` to ``` #include "raylibdll" ``` helped
+
+### raygui
+you have to either compile raygui with raylib or as a separate lib
+
+for more info i advice looking in this [thread][https://github.com/WIITD/raylib-freebasic/issues/7] and [official raygui repo][https://github.com/raysan5/raygui]
 
 for more info about building raylib visit [official wiki](https://github.com/raysan5/raylib/wiki)
 and for raygui check [official repo](https://github.com/raysan5/raygui#building)
 
-
-
+## examples
+[examples][https://github.com/WIITD/raylib-freebasic/tree/main/examples]
 simple game i wrote that uses [raylib-freebasic](https://github.com/WIITD/asteroid_field/tree/raylib-freebasic)
