@@ -1,4 +1,4 @@
-# raylib-freebasic -> v4.5
+# raylib-freebasic -> v5.0
 
 [FreeBasic](https://freebasic.net/) bindings for [raylib](https://github.com/raysan5/raylib)  
   

@@ -34,10 +34,10 @@
 extern "C"
 
 #define RAYLIB_H
-const RAYLIB_VERSION_MAJOR = 4
-const RAYLIB_VERSION_MINOR = 5
+const RAYLIB_VERSION_MAJOR = 5
+const RAYLIB_VERSION_MINOR = 0
 const RAYLIB_VERSION_PATCH = 0
-#define RAYLIB_VERSION "4.5"
+#define RAYLIB_VERSION "5.0"
 
 #ifndef PI
 	const PI = 3.14159265358979323846
@@ -443,6 +443,18 @@ type FilePathList
 	paths as zstring ptr ptr
 end type
 
+type AutomationEvent
+	frame as ulong
+	type_ as ulong
+	params(0 to 4) as long
+end type
+
+type AutomationEventList
+	capacity as ulong
+	count as ulong
+	events as AutomationEvent ptr
+end type
+
 type ConfigFlags as long
 enum
 	FLAG_VSYNC_HINT = &h00000040
@@ -734,6 +746,9 @@ enum
 	PIXELFORMAT_UNCOMPRESSED_R32
 	PIXELFORMAT_UNCOMPRESSED_R32G32B32
 	PIXELFORMAT_UNCOMPRESSED_R32G32B32A32
+	PIXELFORMAT_UNCOMPRESSED_R16
+	PIXELFORMAT_UNCOMPRESSED_R16G16B16
+	PIXELFORMAT_UNCOMPRESSED_R16G16B16A16
 	PIXELFORMAT_COMPRESSED_DXT1_RGB
 	PIXELFORMAT_COMPRESSED_DXT1_RGBA
 	PIXELFORMAT_COMPRESSED_DXT3_RGBA
@@ -832,9 +847,13 @@ enum
 end enum
 
 type TraceLogCallback as sub(byval logLevel as long, byval text as const zstring ptr, byval args as va_list)
-type LoadFileDataCallback as function(byval fileName as const zstring ptr, byval bytesRead as ulong ptr) as ubyte ptr
-type SaveFileDataCallback as function(byval fileName as const zstring ptr, byval data_ as any ptr, byval bytesToWrite as ulong) as boolean
+
+type LoadFileDataCallback as function(byval fileName as const zstring ptr, byval dataSize as long ptr) as ubyte ptr
+
+type SaveFileDataCallback as function(byval fileName as const zstring ptr, byval data_ as any ptr, byval dataSize as long) as boolean
+
 type LoadFileTextCallback as function(byval fileName as const zstring ptr) as zstring ptr
+
 type SaveFileTextCallback as function(byval fileName as const zstring ptr, byval text as zstring ptr) as boolean
 
 declare sub InitWindow(byval width_ as long, byval height_ as long, byval title as const zstring ptr)
@@ -851,6 +870,7 @@ declare function IsWindowState(byval flag as ulong) as boolean
 declare sub SetWindowState(byval flags as ulong)
 declare sub ClearWindowState(byval flags as ulong)
 declare sub ToggleFullscreen()
+declare sub ToggleBorderlessWindow()
 declare sub MaximizeWindow()
 declare sub MinimizeWindow()
 declare sub RestoreWindow()
@@ -860,8 +880,10 @@ declare sub SetWindowTitle(byval title as const zstring ptr)
 declare sub SetWindowPosition(byval x as long, byval y as long)
 declare sub SetWindowMonitor(byval monitor as long)
 declare sub SetWindowMinSize(byval width_ as long, byval height_ as long)
+declare sub SetWindowMaxSize(byval width_ as long, byval height_ as long)
 declare sub SetWindowSize(byval width_ as long, byval height_ as long)
 declare sub SetWindowOpacity(byval opacity as single)
+declare sub SetWindowFocused()
 declare function GetWindowHandle() as any ptr
 declare function GetScreenWidth() as long
 declare function GetScreenHeight() as long
@@ -946,10 +968,10 @@ declare sub SetLoadFileDataCallback(byval callback as LoadFileDataCallback)
 declare sub SetSaveFileDataCallback(byval callback as SaveFileDataCallback)
 declare sub SetLoadFileTextCallback(byval callback as LoadFileTextCallback)
 declare sub SetSaveFileTextCallback(byval callback as SaveFileTextCallback)
-declare function LoadFileData(byval fileName as const zstring ptr, byval bytesRead as ulong ptr) as ubyte ptr
+declare function LoadFileData(byval fileName as const zstring ptr, byval dataSize as long ptr) as ubyte ptr
 declare sub UnloadFileData(byval data_ as ubyte ptr)
-declare function SaveFileData(byval fileName as const zstring ptr, byval data_ as any ptr, byval bytesToWrite as ulong) as boolean
-declare function ExportDataAsCode(byval data_ as const zstring ptr, byval size as ulong, byval fileName as const zstring ptr) as boolean
+declare function SaveFileData(byval fileName as const zstring ptr, byval data_ as any ptr, byval dataSize as long) as boolean
+declare function ExportDataAsCode(byval data_ as const zstring ptr, byval dataSize as long, byval fileName as const zstring ptr) as boolean
 declare function LoadFileText(byval fileName as const zstring ptr) as zstring ptr
 declare sub UnloadFileText(byval text as zstring ptr)
 declare function SaveFileText(byval fileName as const zstring ptr, byval text as zstring ptr) as boolean
@@ -964,7 +986,7 @@ declare function GetDirectoryPath(byval filePath as const zstring ptr) as const 
 declare function GetPrevDirectoryPath(byval dirPath as const zstring ptr) as const zstring ptr
 declare function GetWorkingDirectory() as const zstring ptr
 declare function GetApplicationDirectory() as const zstring ptr
-declare function ChangeDirectory(byval dir as const zstring ptr) as boolean
+declare function ChangeDirectory(byval dir_ as const zstring ptr) as boolean
 declare function IsPathFile(byval path as const zstring ptr) as boolean
 declare function LoadDirectoryFiles(byval dirPath as const zstring ptr) as FilePathList
 declare function LoadDirectoryFilesEx(byval basePath as const zstring ptr, byval filter as const zstring ptr, byval scanSubdirs as boolean) as FilePathList
@@ -977,7 +999,19 @@ declare function CompressData(byval data_ as const ubyte ptr, byval dataSize as 
 declare function DecompressData(byval compData as const ubyte ptr, byval compDataSize as long, byval dataSize as long ptr) as ubyte ptr
 declare function EncodeDataBase64(byval data_ as const ubyte ptr, byval dataSize as long, byval outputSize as long ptr) as zstring ptr
 declare function DecodeDataBase64(byval data_ as const ubyte ptr, byval outputSize as long ptr) as ubyte ptr
+
+declare function LoadAutomationEventList(byval fileName as const zstring ptr) as AutomationEventList
+declare sub UnloadAutomationEventList(byval list_ as AutomationEventList ptr)
+declare function ExportAutomationEventList(byval list_ as AutomationEventList, byval fileName as const zstring ptr) as boolean
+declare sub SetAutomationEventList(byval list_ as AutomationEventList ptr)
+declare sub SetAutomationEventBaseFrame(byval frame_ as long)
+declare sub StartAutomationEventRecording()
+declare sub StopAutomationEventRecording()
+declare sub PlayAutomationEvent(byval frame_ as AutomationEvent)
+
+
 declare function IsKeyPressed(byval key as long) as boolean
+declare function IsKeyPressedRepeat(byval key as long) as boolean
 declare function IsKeyDown(byval key as long) as boolean
 declare function IsKeyReleased(byval key as long) as boolean
 declare function IsKeyUp(byval key as long) as boolean
@@ -1014,7 +1048,7 @@ declare function GetTouchPosition(byval index as long) as Vector2
 declare function GetTouchPointId(byval index as long) as long
 declare function GetTouchPointCount() as long
 declare sub SetGesturesEnabled(byval flags as ulong)
-declare function IsGestureDetected(byval gesture as long) as boolean
+declare function IsGestureDetected(byval gesture as ulong) as boolean
 declare function GetGestureDetected() as long
 declare function GetGestureHoldDuration() as single
 declare function GetGestureDragVector() as Vector2
@@ -1073,6 +1107,7 @@ declare function CheckCollisionPointLine(byval point_ as Vector2, byval p1 as Ve
 declare function GetCollisionRec(byval rec1 as Rectangle, byval rec2 as Rectangle) as Rectangle
 declare function LoadImage(byval fileName as const zstring ptr) as Image
 declare function LoadImageRaw(byval fileName as const zstring ptr, byval width_ as long, byval height_ as long, byval format_ as long, byval headerSize as long) as Image
+declare function LoadImageSVG(byval fileNameOrString as const zstring ptr, byval width_ as long, byval height_ as long) as Image
 declare function LoadImageAnim(byval fileName as const zstring ptr, byval frames as long ptr) as Image
 declare function LoadImageFromMemory(byval fileType as const zstring ptr, byval fileData as const ubyte ptr, byval dataSize as long) as Image
 declare function LoadImageFromTexture(byval texture as Texture2D) as Image
@@ -1080,11 +1115,12 @@ declare function LoadImageFromScreen() as Image
 declare function IsImageReady(byval image_ as Image) as byte
 declare sub UnloadImage(byval image_ as Image)
 declare function ExportImage(byval image_ as Image, byval fileName as const zstring ptr) as boolean
+declare function ExportImageToMemory(byval image_ as Image, byval fileType as const zstring ptr, byval fileSie as long) as zstring ptr
 declare function ExportImageAsCode(byval image_ as Image, byval fileName as const zstring ptr) as boolean
 declare function GenImageColor(byval width_ as long, byval height_ as long, byval color as RLColor) as Image
-declare function GenImageGradientV(byval width_ as long, byval height_ as long, byval top as RLColor, byval bottom as RLColor) as Image
-declare function GenImageGradientH(byval width_ as long, byval height_ as long, byval left_ as RLColor, byval right_ as RLColor) as Image
+declare function GenImageGradientLinear(byval width_ as long, byval height_ as long, byval direction as long, byval start_ as RLColor, byval end_ as RLColor) as Image
 declare function GenImageGradientRadial(byval width_ as long, byval height_ as long, byval density as single, byval inner as RLColor, byval outer as RLColor) as Image
+declare function GenImageGradientSquare(byval width_ as long, byval height_ as long, byval density as single, byval inner as RLColor, byval outer as RLColor) as Image
 declare function GenImageChecked(byval width_ as long, byval height_ as long, byval checksX as long, byval checksY as long, byval col1 as RLColor, byval col2 as RLColor) as Image
 declare function GenImageWhiteNoise(byval width_ as long, byval height_ as long, byval factor as single) as Image
 declare function GenImagePerlinNoise(byval width_ as long, byval height_ as long, byval offsetX as long, byval offsetY as long, byval scale as single) as Image
@@ -1109,6 +1145,7 @@ declare sub ImageMipmaps(byval image_ as Image ptr)
 declare sub ImageDither(byval image_ as Image ptr, byval rBpp as long, byval gBpp as long, byval bBpp as long, byval aBpp as long)
 declare sub ImageFlipVertical(byval image_ as Image ptr)
 declare sub ImageFlipHorizontal(byval image_ as Image ptr)
+declare sub ImageRotate(byval image_ as Image ptr, byval degrees as long)
 declare sub ImageRotateCW(byval image_ as Image ptr)
 declare sub ImageRotateCCW(byval image_ as Image ptr)
 declare sub ImageColorTint(byval image_ as Image ptr, byval color as RLColor)
@@ -1175,13 +1212,13 @@ declare sub SetPixelColor(byval dstPtr as any ptr, byval color as RLColor, byval
 declare function GetPixelDataSize(byval width_ as long, byval height_ as long, byval format_ as long) as long
 declare function GetFontDefault() as Font
 declare function LoadFont(byval fileName as const zstring ptr) as Font
-declare function LoadFontEx(byval fileName as const zstring ptr, byval fontSize as long, byval fontChars as long ptr, byval glyphCount as long) as Font
+declare function LoadFontEx(byval fileName as const zstring ptr, byval fontSize as long, byval codepoints as long ptr, byval codepointCount as long) as Font
 declare function LoadFontFromImage(byval image_ as Image, byval key as RLColor, byval firstChar as long) as Font
-declare function LoadFontFromMemory(byval fileType as const zstring ptr, byval fileData as const ubyte ptr, byval dataSize as long, byval fontSize as long, byval fontChars as long ptr, byval glyphCount as long) as Font
+declare function LoadFontFromMemory(byval fileType as const zstring ptr, byval fileData as const ubyte ptr, byval dataSize as long, byval fontSize as long, byval codepoints as long ptr, byval codepointCount as long) as Font
 declare function IsFontReady(byval font as Font) as byte
-declare function LoadFontData(byval fileData as const ubyte ptr, byval dataSize as long, byval fontSize as long, byval fontChars as long ptr, byval glyphCount as long, byval type as long) as GlyphInfo ptr
-declare function GenImageFontAtlas(byval chars as const GlyphInfo ptr, byval recs as Rectangle ptr ptr, byval glyphCount as long, byval fontSize as long, byval padding as long, byval packMethod as long) as Image
-declare sub UnloadFontData(byval chars as GlyphInfo ptr, byval glyphCount as long)
+declare function LoadFontData(byval fileData as const ubyte ptr, byval dataSize as long, byval fontSize as long, byval codepoints as long ptr, byval codepointCount as long, byval type as long) as GlyphInfo ptr
+declare function GenImageFontAtlas(byval glyphs as const GlyphInfo ptr, byval glyphRecs as Rectangle ptr ptr, byval glyphCount as long, byval fontSize as long, byval padding as long, byval packMethod as long) as Image
+declare sub UnloadFontData(byval glyphs as GlyphInfo ptr, byval glyphCount as long)
 declare sub UnloadFont(byval font as Font)
 declare function ExportFontAsCode(byval font as Font, byval fileName as const zstring ptr) as boolean
 declare sub DrawFPS(byval posX as long, byval posY as long)
@@ -1189,7 +1226,10 @@ declare sub DrawText(byval text as const zstring ptr, byval posX as long, byval 
 declare sub DrawTextEx(byval font as Font, byval text as const zstring ptr, byval position as Vector2, byval fontSize as single, byval spacing as single, byval tint as RLColor)
 declare sub DrawTextPro(byval font as Font, byval text as const zstring ptr, byval position as Vector2, byval origin as Vector2, byval rotation as single, byval fontSize as single, byval spacing as single, byval tint as RLColor)
 declare sub DrawTextCodepoint(byval font as Font, byval codepoint as long, byval position as Vector2, byval fontSize as single, byval tint as RLColor)
-declare sub DrawTextCodepoints(byval font as Font, byval codepoints as const long ptr, byval count as long, byval position as Vector2, byval fontSize as single, byval spacing as single, byval tint as RLColor)
+declare sub DrawTextCodepoints(byval font as Font, byval codepoints as const long ptr, byval codepointCount as long, byval position as Vector2, byval fontSize as single, byval spacing as single, byval tint as RLColor)
+
+declare sub SetTextLineSpacing(byval spaceing as long)
+
 declare function MeasureText(byval text as const zstring ptr, byval fontSize as long) as long
 declare function MeasureTextEx(byval font as Font, byval text as const zstring ptr, byval fontSize as single, byval spacing as single) as Vector2
 declare function GetGlyphIndex(byval font as Font, byval codepoint as long) as long
@@ -1278,10 +1318,10 @@ declare function IsMaterialReady(byval material as Material) as byte
 declare sub UnloadMaterial(byval material as Material)
 declare sub SetMaterialTexture(byval material as Material ptr, byval mapType as long, byval texture as Texture2D)
 declare sub SetModelMeshMaterial(byval model as Model ptr, byval meshId as long, byval materialId as long)
-declare function LoadModelAnimations(byval fileName as const zstring ptr, byval animCount as ulong ptr) as ModelAnimation ptr
+declare function LoadModelAnimations(byval fileName as const zstring ptr, byval animCount as long ptr) as ModelAnimation ptr
 declare sub UpdateModelAnimation(byval model as Model, byval anim as ModelAnimation, byval frame as long)
 declare sub UnloadModelAnimation(byval anim as ModelAnimation)
-declare sub UnloadModelAnimations(byval animations as ModelAnimation ptr, byval count as ulong)
+declare sub UnloadModelAnimations(byval animations as ModelAnimation ptr, byval count as long)
 declare function IsModelAnimationValid(byval model as Model, byval anim as ModelAnimation) as boolean
 declare function CheckCollisionSpheres(byval center1 as Vector3, byval radius1 as single, byval center2 as Vector3, byval radius2 as single) as boolean
 declare function CheckCollisionBoxes(byval box1 as BoundingBox, byval box2 as BoundingBox) as boolean
@@ -1296,15 +1336,18 @@ declare sub InitAudioDevice()
 declare sub CloseAudioDevice()
 declare function IsAudioDeviceReady() as boolean
 declare sub SetMasterVolume(byval volume as single)
+declare function GetMasterVolume() as single
 declare function LoadWave(byval fileName as const zstring ptr) as Wave
 declare function LoadWaveFromMemory(byval fileType as const zstring ptr, byval fileData as const ubyte ptr, byval dataSize as long) as Wave
 declare function IsWaveReady(byval wave as Wave) as byte
 declare function LoadSound(byval fileName as const zstring ptr) as Sound
 declare function LoadSoundFromWave(byval wave as Wave) as Sound
+declare function LoadSoundAlias(byval source as Sound) as Sound
 declare function IsSoundReady(byval sound as Sound) as byte
 declare sub UpdateSound(byval sound as Sound, byval data_ as const any ptr, byval sampleCount as long)
 declare sub UnloadWave(byval wave as Wave)
 declare sub UnloadSound(byval sound as Sound)
+declare sub UnloadSoundAlias(byval alias as Sound)
 declare function ExportWave(byval wave as Wave, byval fileName as const zstring ptr) as boolean
 declare function ExportWaveAsCode(byval wave as Wave, byval fileName as const zstring ptr) as boolean
 declare sub PlaySound(byval sound as Sound)
